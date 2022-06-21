@@ -1,0 +1,150 @@
+#spring.profiles.active: local
+logging.level.com.optum.exts.cdb.stream.SourceCSBStreams: INFO
+##logging.level: INFO
+#logging.level.com.optum.exts: ${logging.level}
+#logging.level.org.apache.kafka: ${logging.level}
+#logging.level.com.datastax.driver.core.policies: ${logging.level}
+#logging.level.org.apache.kafka.streams.processor.internals.RecordCollectorImpl: OFF
+#logging.level.org.apache.kafka.streams.processor.internals.AssignedTasks: OFF
+#logging.level.com.example.demo.LogbackTestApplication: info
+server.port: 9096
+#server.port: 8080
+
+spring:
+  kafka:
+    #auto.commit.interval.ms: 6000
+    bootstrapServers: kaas-test-ctc-a.optum.com:443
+    #errors.tolerance : all
+    #acks: all
+
+    streams:
+      applicationId: cdb-postgresql-stream-ingestionlog-testiii
+      metricsRecordingLevel: INFO
+      properties:
+        security.protocol: "SSL"
+        #ssl.keystore.location: /mapr/datalake/other/cdb/users/rgupta59/cert/cdb-extract-base.jks
+        #ssl.truststore.location: /mapr/datalake/other/cdb/users/rgupta59/cert/pep-generic-truststore.jks
+        #ssl.keystore.location: /Users/rgupta59/Documents/cdb-extract-base/cdb-extract-base.jks
+        #ssl.truststore.location: /Users/rgupta59/Documents/cdb-extract-base/pep-generic-truststore.jks
+        #ssl.keystore.location: C:\Work\jks-security\cdb-extract-base.jks
+        #ssl.truststore.location: C:\Work\jks-security\pep-generic-truststore.jks
+        ssl.keystore.location: /tmp/cdb-alpha-edp.keystore.jks
+        ssl.truststore.location: /tmp/kaas-truststore.jks
+        #ssl.truststore.location: C:\Work\jks-security\kaas-truststore.jks
+        #ssl.keystore.location: C:\Work\jks-security\cdb-alpha-edp.keystore.jks
+        #ssl.truststore.password: LGQAl1oXBMBKiH4uekyxow
+        ssl.truststore.password: 6xr3ybC17WTAxm4gS12qSg
+        ssl.keystore.password: KJLmyQ7tJRXifJ04eGSLxQ
+        #ssl.keystore.password: KJLmyQ7tJRXifJ04eGSLxQ
+        ssl.key.password: KJLmyQ7tJRXifJ04eGSLxQ
+        #ssl.key.password: KJLmyQ7tJRXifJ04eGSLxQ
+        default.timestamp.extractor: org.apache.kafka.streams.processor.WallclockTimestampExtractor
+        default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        #commitInterval: 1000
+        #commit.interval.ms: 2500
+        auto.offset.reset: earliest
+      custom:
+        "[batch.size]": 1000012
+        "[default.api.timeout.ms]": 900000
+        "[delivery.timeout.ms]": 2147483647
+        "[heartbeat.interval.ms]": 6000
+        "[max.block.ms]": 2147483647
+        "[max.in.flight.requests.per.connection]": 1
+        "[max.request.size]": 1000012
+        "[request.timeout.ms]": 60000
+        "[retries]": 2147483647
+        "[session.timeout.ms]": 120000
+    properties:
+      #schema.registry.url: "http://kaas-test-schema-registry-a.optum.com" #http://127.0.0.1:8081
+      schema.registry.url: "http://kaas-test-schema-registry-a.optum.com"
+      specific.avro.reader: true
+      num.stream.threads: 3
+      #commitInterval: 1000
+      #enable.auto.commit: true
+      ##commitInterval: 1000
+      ##auto.commit.interval.ms: 1000
+      #enable.auto.commit: true
+      #commit.interval.ms: 2500
+      #batch.size: 1000012
+      #default.api.timeout.ms: 900000
+      #delivery.timeout.ms: 2147483647
+      #heartbeat.interval.ms: 6000
+      #max.block.ms: 2147483647
+      #max.in.flight.requests.per.connection: 1
+      #max.request.size: 1000012
+      #request.timeout.ms: 60000
+      #retries: 2147483647
+      #session.timeout.ms: 120000
+      #enable.auto.commit: true
+
+streams:
+  topicinfo:
+    cdbFltr: kaas.ATTTEST.CDB.F6435DBS.CDB_FLTR
+    cdbSecurity: kaas.ATTTEST.CDB.F6435SRS.CDB_SECURITY
+    cnsmDtl: kaas.ATTTEST.CDB.F6435DBS.CNSM_DTL
+    cnsmMdcrEnrl: kaas.ATTTEST.CDB.F6435DBS.CNSM_MDCR_ENRL
+    cnsmMdcrPrisec: kaas.ATTTEST.CDB.F6435DBS.CNSM_MDCR_PRISEC
+    cnsmSts: kaas.ATTTEST.CDB.F6435DBS.CNSM_STS
+    lCnsmSrch: kaas.ATTTEST.CDB.F6435DBS.L_CNSM_SRCH
+    LcovPrdtdt: kaas.ATTTEST.CDB.F6435DBS.L_COV_PRDT_DT
+    lCovPrdtPcp: kaas.ATTTEST.CDB.F6435DBS.L_COV_PRDT_PCP
+    lHltSrvDt: kaas.ATTTEST.CDB.F6435DBS.L_HLT_SRV_DT
+    lLfDisPrdtDt: kaas.ATTTEST.CDB.F6435DBS.L_LF_DIS_PRDT_DT
+    mlCnsmAdr: kaas.ATTTEST.CDB.F6435DBS.ML_CNSM_ADR
+    mlCnsmElctrAdr: kaas.ATTTEST.CDB.F6435DBS.ML_CNSM_ELCTR_ADR
+    mlCnsmTel: kaas.ATTTEST.CDB.F6435DBS.ML_CNSM_TEL
+    cnsmMdcrEntl: kaas.ATTTEST.CDB.F6435DBS.CNSM_MDCR_ENTL
+    cnsmOthrIns: kaas.ATTTEST.CDB.F6435DBS.CNSM_OTHR_INS
+    covLvlTyp: kaas.ATTTEST.CDB.F6435DBS.COV_LVL_TYP
+    mlCnsmXref: kaas.ATTTEST.CDB.F6435DBS.ML_CNSM_XREF
+
+    cnsmAuthRep: kaas.ATTTEST.CDB.F6435DBS.CNSM_AUTH_REP
+    cnsmCal: kaas.ATTTEST.CDB.F6435DBS.CNSM_CAL
+    cnsmCobPrisec: kaas.ATTTEST.CDB.F6435DBS.CNSM_COB_PRISEC
+    cnsmCobPrimacy: kaas.ATTTEST.CDB.F6435DBS.CNSM_COB_PRIMACY
+    cnsmCovCustDefnFld: kaas.ATTTEST.CDB.F6435DBS.CNSM_COV_CUST_DEFN_FLD
+    cnsmCustDefnFld: kaas.ATTTEST.CDB.F6435DBS.CNSM_CUST_DEFN_FLD
+
+    cnsmEft: kaas.ATTTEST.CDB.F6435DBS.CNSM_EFT
+    cnsmMdcrElig: kaas.ATTTEST.CDB.F6435DBS.CNSM_MDCR_ELIG
+    cnsmMdcrPrimacy: kaas.ATTTEST.CDB.F6435DBS.CNSM_MDCR_PRIMACY
+    cnsmPrxstCond: kaas.ATTTEST.CDB.F6435DBS.CNSM_PRXST_COND
+    cnsmSlryBasDedOop: kaas.ATTTEST.CDB.F6435DBS.CNSM_SLRY_BAS_DED_OOP
+    covInfo: kaas.ATTTEST.CDB.F6435DBS.COV_INFO
+    custInfo: kaas.ATTTEST.CDB.F6435DBS.CUST_INFO
+    plnBenSet: kaas.ATTTEST.CDB.F6435DBS.PLN_BEN_SET
+    plnBenSetDet: kaas.ATTTEST.CDB.F6435DBS.PLN_BEN_SET_DET
+    polInfo: kaas.ATTTEST.CDB.F6435DBS.POL_INFO
+    rxBenSetDet: kaas.ATTTEST.CDB.F6435DBS.RX_BEN_SET_DET
+
+    prdtTrig: kaas.cdb-elig.adptn_memcnt.ctc.test.l_cov_prdt_dt_trig.v2
+    disTrig: kaas.cdb-elig.adptn_memcnt.ctc.test.l_lf_dis_prdt_dt_trig.v2
+    hltSrvTrig: kaas.cdb-elig.adptn_memcnt.ctc.test.l_hlt_srv_dt_trig.v2
+
+input:
+  postgresUrl: jdbc:postgresql://dbvrd28250:5432/postgres?stringtype=unspecified
+  postgresUser: postgres
+  postgresPwd: postgres
+  schema: systest
+  physicalDelValue: X
+  srcSysId: ADPTSTRM
+  runningSet: env.get("$groupName")
+  queryLookup:
+    ingestionLog: INSERT INTO <SCHEMA>.long_term_ingestion_log(table_name, row_key, ingestion_ts, row_sts_cd, cdc_flag, cdc_ts, hst_val, new_val) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT (table_name, row_key, ingestion_ts) DO UPDATE SET row_sts_cd = ?, cdc_flag = ?, cdc_ts = ?, hst_val = ?, new_val = ?
+
+#spring.datasource.driver-class-name: org.postgresql.Driver
+#spring.datasource.url: jdbc:postgresql://dbvrd28250:6543/postgres?prepareThreshold=0
+spring.datasource.dataSourceClassName: org.postgresql.ds.PGSimpleDataSourcer
+spring.datasource.url: jdbc:postgresql://dbvrd28250:5432/postgres?stringtype=unspecified
+spring.datasource.username: postgres
+spring.datasource.password: postgres
+spring.datasource.type: com.zaxxer.hikari.HikariDataSource
+spring.datasource.hikari.minimumIdle: 10
+spring.datasource.hikari.maximumPoolSize: 40
+spring.datasource.hikari.idleTimeout: 30000
+spring.datasource.hikari.poolName: CSPHikariCP
+spring.datasource.hikari.maxLifetime: 200000
+spring.datasource.hikari.connectionTimeout: 1500000
+spring.datasource.hikari.leakDetectionThreshold: 2100000
+

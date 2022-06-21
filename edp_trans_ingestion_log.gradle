@@ -1,0 +1,144 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'https://plugins.gradle.org/m2' }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://repo1.uhc.com/artifactory' }
+        //maven { url 'https://repo1.uhc.com/bds_oso_id/lz' }
+        maven { url "https://repo1.uhc.com/artifactory/docker/bds_oso_id" }
+
+    }
+    dependencies {
+        dependencies {
+            classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementPluginVersion}"
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8"
+          // runtimeOnly 'org.postgresql:postgresql'
+
+        }
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.sonarqube'
+
+
+String activeSpringProfile = System.getProperty("spring.profiles.active") ?: 'DEV'
+
+
+
+bootRun {
+    args = ["--spring.profiles.active=" + activeSpringProfile]
+}
+
+   repositories {
+       maven { url "https://repo1.uhc.com/artifactory/docker/bds_oso_id/"}
+    //maven { url "https://repo1.uhc.com/docker/bds_oso_id/com/optum/cdb-edp-model-Attunity/0.0.1/" }
+    //maven { url "${artifactoryRepo}/docker/bds_oso_id/lz" }
+    maven { url "${artifactoryRepo}/repo" }
+    maven { url "http://packages.confluent.io/maven/" }
+   // maven { url 'https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent' }
+    mavenLocal()
+}
+
+ext['cassandra-driver.version'] = "${cassandraVersion}"
+
+configurations {
+
+
+    all*.exclude group: 'io.micrometer', module: 'micrometer-spring-legacy'
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.apache.logging.log4j') {
+            details.useVersion '2.15.0'
+        }
+    }
+    exclude group: "org.slf4j", module: "slf4j-log4j12"
+    //exclude group: "log4j", module: "log4j"
+   exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+
+   // exclude group: 'ch.qos.logback',module: 'logback-classic'
+}
+
+dependencies {
+    // optum
+    compile "com.optum.exts:common-utils:${extsCommonLibsVersion}"
+    compile ("com.optum.exts:stream-transformers-cassandra-avro:${extsCommonStreamLibsVersion}")
+    //compile "com.optum:cdb-edp-model_Adop:${extsCdbModelVersion}"
+    compile ("com.optum:cdb-edp-model-Attunity:${extsCdbModelVersion}")
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '3.2.0.RELEASE'
+    compile group: 'com.splunk.logging', name: 'splunk-library-javalogging', version: '1.6.2'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+    //compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+
+
+    // Avro
+    compile "org.apache.avro:avro:${avroVersion}"
+    compile "io.confluent:kafka-streams-avro-serde:${avroSerdeVersion}"
+
+    // Kafka
+    compile "org.apache.kafka:kafka-streams:${kafkaVersion}"
+    compile "org.apache.kafka:kafka-clients:${kafkaVersion}"
+    compile "org.springframework.kafka:spring-kafka:${springKafkaVersion}"
+
+    compile "org.apache.commons:commons-lang3:3.6"
+    compile group: 'commons-lang', name: 'commons-lang', version: '2.2'
+    compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.19'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: '2.1.1.RELEASE'
+
+    //runtimeOnly // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent
+    //runtimeOnly group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.1.RELEASE', ext: 'pom'
+
+   // compile 'org.springframework.boot:spring-boot-starter-jdbc:2.1.7.RELEASE'
+
+
+    // Micrometer / Prometheus
+   // runtime "io.micrometer:micrometer-core"
+   // runtime "io.micrometer:micrometer-registry-prometheus:${micometerRegistryPrometheusVersion}"
+    //runtimeOnly 'org.postgresql:postgresql'
+
+    // spring
+    compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.1.RELEASE'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+   // compile group: 'org.springframework', name: 'spring-jdbc', version: '5.1.3.RELEASE'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
+
+
+    // Test libraries
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testCompile "org.springframework.kafka:spring-kafka-test:${springKafkaVersion}"
+    testCompile "org.spockframework:spock-core:${spockVersion}"
+    testCompile "org.spockframework:spock-spring:${spockVersion}"
+    testCompile "org.cassandraunit:cassandra-unit-spring:${cassandraUnitVersion}"
+
+}
+
+pluginManager.withPlugin('groovy') {
+
+    //have groovy?  Use spock then.
+    dependencies {
+        //spock
+        testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        testCompile "org.spockframework:spock-core:${spockVersion}"
+
+        // optional dependencies for using Spock
+        testRuntime "net.bytebuddy:byte-buddy:${byteBuddyVersion}"
+        testRuntime "org.objenesis:objenesis:${objenesisVersion}"
+    }
+}
+
+pluginManager.withPlugin('java') {
+
+    //use JDK 1.8
+    sourceCompatibility = 1.8
+
+}
+
+

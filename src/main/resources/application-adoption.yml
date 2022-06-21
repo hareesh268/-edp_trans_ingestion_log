@@ -1,0 +1,182 @@
+spring.profiles.active: local
+
+logging.level: INFO
+logging.level.com.optum.exts: ${logging.level}
+logging.level.org.apache.kafka: ${logging.level}
+logging.level.com.datastax.driver.core.policies: ${logging.level}
+logging.level.org.apache.kafka.streams.processor.internals.RecordCollectorImpl: OFF
+logging.level.org.apache.kafka.streams.processor.internals.AssignedTasks: OFF
+##server.port: 8184
+
+##Adoption
+
+
+
+spring:
+  kafka:
+    #auto.offset.reset: latest
+    #auto.commit.interval.ms: 6000
+    bootstrapServers: kaas-test-ctc-a.optum.com:443
+    #errors.tolerance : all
+    #acks: all
+
+
+
+    streams:
+      applicationId: cdb-postgresql-stream-Adoption3
+      #applicationId: cdb-postgresql-stream
+
+
+
+
+      metricsRecordingLevel: INFO
+
+
+      properties:
+
+        security.protocol: "SSL"
+        #ssl.keystore.location: /mapr/datalake/other/cdb/users/rgupta59/cert/cdb-extract-base.jks
+        #ssl.truststore.location: /mapr/datalake/other/cdb/users/rgupta59/cert/pep-generic-truststore.jks
+        ssl.keystore.location: /Users/rgupta59/Documents/Adoption_Dev_cert/cdb-alpha-attunity.keystore.jks
+        ssl.truststore.location: /Users/rgupta59/Documents/Adoption_Dev_cert/kaas-truststore.jks
+        #ssl.keystore.location: /tmp/cdb-alpha-attunity.keystore.jks
+        #ssl.truststore.location: /tmp/kaas-truststore.jks
+
+        ssl.truststore.password: LGQAl1oXBMBKiH4uekyxow
+        ssl.keystore.password: nDVdnvPZF1VXGwReNWpSaA
+        ssl.key.password: nDVdnvPZF1VXGwReNWpSaA
+        default.timestamp.extractor: org.apache.kafka.streams.processor.WallclockTimestampExtractor
+        default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        #commitInterval: 1000
+       #commit.interval.ms: 2500
+        #auto.offset.reset: latest
+
+
+
+
+    properties:
+      schema.registry.url: "http://cp-schema-registry-data-exts-platform-dev.ocp-ctc-core-nonprod.optum.com" #http://127.0.0.1:8081
+      specific.avro.reader: true
+      #num.stream.threads: 4
+      #commitInterval: 1000
+      #enable.auto.commit: true
+      ##commitInterval: 1000
+      ##auto.commit.interval.ms: 1000
+      #enable.auto.commit: true
+      #commit.interval.ms: 2500
+      #batch.size: 1000012
+      #default.api.timeout.ms: 900000
+      #delivery.timeout.ms: 2147483647
+      #heartbeat.interval.ms: 6000
+      #max.block.ms: 2147483647
+      #max.in.flight.requests.per.connection: 1
+      #max.request.size: 1000012
+      #request.timeout.ms: 60000
+      #retries: 2147483647
+      #session.timeout.ms: 120000
+      #enable.auto.commit: true
+
+
+
+
+
+streams:
+
+
+
+
+  topicinfo:
+    lcnsmSrch: DE_STREAMS.ctc.cdc.cdb.l_cnsm_srch.v3
+    cnsmSts: kaas.ATTTEST.CDB.F6435DBS.CNSM_STS
+    lcovPrdtdt: kaas.ATTTEST.CDB.F6435DBS.L_COV_PRDT_DT
+    covLvlTyp: DE_STREAMS.ctc.cdc.cdb.cov_lvl_typ.v3
+    mlCnsmAdr: DE_STREAMS.ctc.cdc.cdb.ml_cnsm_adr.v3
+    mlCnsmTel: DE_STREAMS.ctc.cdc.cdb.ml_cnsm_tel.v3
+    mlCnsmElctrAdr: DE_STREAMS.ctc.cdc.cdb.ml_cnsm_elctr_adr.v3
+    lCovPrdtPcp: DE_STREAMS.ctc.cdc.cdb.l_cov_prdt_pcp.v3
+    cnsmDtl: DE_STREAMS.ctc.cdc.cdb.cnsm_dtl.v3
+    lHltSrvDt: kaas.ATTTEST.CDB.F6435DBS.L_HLT_SRV_DT
+    lLfDisPrdtDt: ATTPROD.CDB.f6435dba.f6435dba.l_hlt_srv_dt.v3
+    cdbSecurity: DE_STREAMS.ctc.cdc.cdb.cdb_security.v3
+    cnsmMdcrEnrl: kaas.ATTTEST.CDB.F6435DBS.CNSM_MDCR_ENRL
+    cnsmMdcrPrisec: DE_STREAMS.ctc.cdc.cdb.cnsm_mdcr_prisec.v3
+    mlCnsmXref: DE_STREAMS.ctc.cdc.cdb.ml_cnsm_xref.v3
+    prdtTrig: cdb_memcnt.ctc.test.l_cov_prdt_dt_trig.v3
+    disTrig: cdb_memcnt.ctc.test.l_lf_dis_prdt_dt_trig.v3
+    hltSrvTrig: cdb_memcnt.ctc.test.l_hlt_srv_dt_trig.v3
+
+
+
+
+
+
+
+
+input:
+
+  postgresUrl: jdbc:postgresql://dbvrd28250:5432/postgres
+  postgresUser: postgres
+  postgresPwd: postgres
+  schema: systest
+  physicalDelValue: X
+  srcSysId: CDBSTRM
+  queryLookup:
+    cnsmSts: INSERT INTO <SCHEMA>.cnsm_sts (partn_nbr,cnsm_id,src_cd,lgcy_src_id,cnsm_sts_typ_cd,cnsm_sts_eff_dt,cnsm_sts_canc_dt,sts_verf_dt,src_cdb_xref_id,xref_id_partn_nbr,updt_typ_cd,racf_id,row_user_id,row_sts_cd,src_tmstmp,row_tmstmp,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,cnsm_sts_typ_cd,cnsm_sts_eff_dt) DO  UPDATE SET cnsm_sts_canc_dt = ?,sts_verf_dt = ?,cnsm_id= ?,partn_nbr = ?,updt_typ_cd = ?,racf_id = ?,row_user_id = ?,row_sts_cd = ?,src_tmstmp = ?,row_tmstmp = ? ,src_sys_id = ?,updt_dttm = ?
+    cnsmStsDel: UPDATE <SCHEMA>.cnsm_sts SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and cnsm_sts_typ_cd=? and cnsm_sts_eff_dt=?::date
+    cdbSecurity: INSERT INTO  <SCHEMA>.cdb_security (role_id,prfl_id,appl_id,src_sys_id,created_dttm,updt_dttm,row_sts_cd) VALUES ( ?,?,?,?,?,?,?) ON CONFLICT (role_id,prfl_id,appl_id) DO  UPDATE SET src_sys_id= ?,updt_dttm= ?,row_sts_cd=?
+    cdbSecurityDel: UPDATE <SCHEMA>.cdb_security SET row_sts_cd = ? ,updt_dttm=? WHERE appl_id=? and role_id=? and prfl_id=?
+    cnsmDtl: INSERT INTO  <SCHEMA>.cnsm_dtl (partn_nbr,cnsm_id,src_cd,lgcy_src_id,hsa_affirm_ind,hsa_elec_sig_ind,hsa_wet_sig_ind,trans_met_nm,upct_sys_id,upct_pol_id,upct_mbr_id,mbr_hipaa_cert_dt,mbr_prtb_ind,lt_enrl_typ_cd,franch_cd,hlth_pgm_cd,hlth_pln_cd,ex_spo_typ_cd,hlth_cov_trnsf_ind,hlth_cov_trnsf_eff_dt,hlth_cov_trnsf_canc_dt,ao_typ_cd,pcp_med_dir_app_ind,rr_cov_cont_yr,depn_elig_proof_dt,src_cdb_xref_id,xref_id_partn_nbr,updt_typ_cd,racf_id,row_user_id,row_sts_cd,src_tmstmp,row_tmstmp,ctzn_sts_typ_cd,hgt_nbr,wgt_nbr,ex_spo_sbscr_id,mnl_ovrd_typ_cd,cml_prxst_typ_cd,coe_cd,soc_wn,cust_nm,coe_desc,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id) DO  UPDATE SET hsa_affirm_ind= ?,hsa_elec_sig_ind= ?,hsa_wet_sig_ind= ?,trans_met_nm= ?,upct_sys_id= ?,upct_pol_id= ?,upct_mbr_id= ?,mbr_hipaa_cert_dt= ?,mbr_prtb_ind= ?,lt_enrl_typ_cd= ?,franch_cd= ?,hlth_pgm_cd= ?,hlth_pln_cd= ?,ex_spo_typ_cd= ?,hlth_cov_trnsf_ind= ?,hlth_cov_trnsf_eff_dt= ?,hlth_cov_trnsf_canc_dt= ?,ao_typ_cd= ?,pcp_med_dir_app_ind= ?,rr_cov_cont_yr= ?,depn_elig_proof_dt= ?,cnsm_id= ?,partn_nbr= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,ctzn_sts_typ_cd= ?,hgt_nbr= ?,wgt_nbr= ?,ex_spo_sbscr_id= ?,mnl_ovrd_typ_cd= ?,cml_prxst_typ_cd= ?,coe_cd= ?,soc_wn= ?,cust_nm= ?,coe_desc= ?,src_sys_id= ?,updt_dttm= ?
+    cnsmDtlDel: UPDATE <SCHEMA>.CNSM_DTL SET row_sts_cd = ? ,updt_dttm=? WHERE partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ?
+    cnsmMdcrEnrl: INSERT INTO  <SCHEMA>.cnsm_mdcr_enrl (partn_nbr,cnsm_id,src_cd,lgcy_src_id,mdcr_part_typ_cd,mdcr_enrl_part_eff_dt,mdcr_enrl_part_canc_dt,src_updt_typ_cd,updt_rstrc_typ_cd,src_cdb_xref_id,xref_id_partn_nbr,updt_typ_cd,racf_id,row_user_id,row_sts_cd,src_tmstmp,row_tmstmp,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,mdcr_part_typ_cd,mdcr_enrl_part_eff_dt) DO  UPDATE SET mdcr_enrl_part_canc_dt= ?,src_updt_typ_cd= ?,updt_rstrc_typ_cd= ?,cnsm_id= ?,partn_nbr= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,src_sys_id= ?,updt_dttm= ?
+    cnsmMdcrEnrlDel: UPDATE <SCHEMA>.cnsm_mdcr_enrl SET row_sts_cd = ? ,updt_dttm=? WHERE partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and mdcr_part_typ_cd=? and mdcr_enrl_part_eff_dt=?::date
+    cnsmMdcrPrisec: INSERT INTO  <SCHEMA>.cnsm_mdcr_prisec (xref_id_partn_nbr,src_cdb_xref_id,mdcr_prisec_eff_dt,mdcr_prisec_canc_dt,mdcr_prisec_typ_cd,src_cd,lgcy_src_id,updt_typ_cd,racf_id,row_user_id,src_tmstmp,row_tmstmp,src_sys_id,created_dttm,updt_dttm,row_sts_cd) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,mdcr_prisec_eff_dt) DO  UPDATE SET mdcr_prisec_canc_dt= ?,mdcr_prisec_typ_cd= ?,src_cd= ?,lgcy_src_id= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,src_tmstmp= ?,row_tmstmp= ?,src_sys_id= ?,updt_dttm= ?,row_sts_cd=?
+    cnsmMdcrPrisecDel: UPDATE <SCHEMA>.cnsm_mdcr_prisec SET row_sts_cd = ? ,updt_dttm=? WHERE xref_id_partn_nbr = ? and src_cdb_xref_id=? and mdcr_prisec_eff_dt=?::date
+    covLvlTyp: INSERT INTO  <SCHEMA>.cov_lvl_typ (cov_lvl_typ_cd,cov_lvl_typ_txt,row_user_id,row_tmstmp,actv_ind,cov_lvl_shrt_txt,src_sys_id,created_dttm,updt_dttm,row_sts_cd) VALUES ( ?,?,?,?,?,?,?,?,?,?) ON CONFLICT (cov_lvl_typ_cd,row_user_id) DO  UPDATE SET cov_lvl_typ_txt= ?,row_tmstmp= ?,actv_ind= ?,cov_lvl_shrt_txt= ?,src_sys_id= ?,updt_dttm= ?,row_sts_cd=?
+    covLvlTypDel: UPDATE <SCHEMA>.cov_lvl_typ SET row_sts_cd = ? ,updt_dttm=? WHERE cov_lvl_typ_cd=?
+    lCnsmSrch: INSERT INTO  <SCHEMA>.l_cnsm_srch (updt_typ_cd,bth_dt,ee_strt_dt,tops_orig_cov_eff_dt,partn_nbr,sec_lvl_cd,fam_partn_nbr,xref_id_partn_nbr,wrk_hr_nbr,cnsm_id,fam_id,src_cdb_xref_id,prfl_id,slry_amt,src_tmstmp,row_tmstmp,created_dttm,src_cd,lgcy_src_id,lgcy_pol_nbr,soc_sec_nbr,lst_nm,fst_nm,midl_init_txt,midl_nm,nm_gen_sufx_typ_cd,sltn_typ_cd,gdr_typ_cd,prot_hlth_info_ind,pst_cd,st_cd,ee_sts_typ_cd,spcl_proc_hndl_cd,lgcy_sbscr_id,lgcy_mbr_id,lgcy_alt_mbr_id,hcac_nbr,sbscr_rel_typ_cd,tops_rel_cd,row_sts_cd,lgcy_src_fam_id,row_user_id,depn_cd,lgcy_clss_id,slry_typ_cd,tbcc_use_ind,lgcy_cust_nbr,tops_seq_nbr,mrtl_sts_typ_cd,prime_depn_cd,qmcso_ind,racf_id,empmt_clss_1_typ_cd,empmt_clss_2_typ_cd,empmt_clss_3_typ_cd,dept_nbr,div_nbr,enrl_rsn_typ_cd,org_typ_cd,src_sys_id,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id) DO  UPDATE SET updt_typ_cd= ?,bth_dt= ?,ee_strt_dt= ?,tops_orig_cov_eff_dt= ?,sec_lvl_cd= ?,fam_partn_nbr= ?,partn_nbr= ?,wrk_hr_nbr= ?,fam_id= ?,cnsm_id= ?,prfl_id= ?,slry_amt= ?,src_tmstmp= ?,row_tmstmp= ?,lgcy_pol_nbr= ?,soc_sec_nbr= ?,lst_nm= ?,fst_nm= ?,midl_init_txt= ?,midl_nm= ?,nm_gen_sufx_typ_cd= ?,sltn_typ_cd= ?,gdr_typ_cd= ?,prot_hlth_info_ind= ?,pst_cd= ?,st_cd= ?,ee_sts_typ_cd= ?,spcl_proc_hndl_cd= ?,lgcy_sbscr_id= ?,lgcy_mbr_id= ?,lgcy_alt_mbr_id= ?,hcac_nbr= ?,sbscr_rel_typ_cd= ?,tops_rel_cd= ?,row_sts_cd= ?,lgcy_src_fam_id= ?,row_user_id= ?,depn_cd= ?,lgcy_clss_id= ?,slry_typ_cd= ?,tbcc_use_ind= ?,lgcy_cust_nbr= ?,tops_seq_nbr= ?,mrtl_sts_typ_cd= ?,prime_depn_cd= ?,qmcso_ind= ?,racf_id= ?,empmt_clss_1_typ_cd= ?,empmt_clss_2_typ_cd= ?,empmt_clss_3_typ_cd= ?,dept_nbr= ?,div_nbr= ?,enrl_rsn_typ_cd= ?,org_typ_cd= ?,src_sys_id= ?,updt_dttm= ?
+    lCnsmSrchDel: UPDATE <SCHEMA>.l_cnsm_srch SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ?
+    lCovPrdtPcp:  INSERT INTO  <SCHEMA>.l_cov_prdt_pcp (partn_nbr,cnsm_id,src_cd,lgcy_src_id,cov_typ_cd,prov_id,pcp_eff_dt,pcp_canc_dt,updt_typ_cd,src_cdb_xref_id,xref_id_partn_nbr,racf_id,row_user_id,row_sts_cd,src_tmstmp,row_tmstmp,prov_contr_id,adr_seq_nbr,lgcy_prdt_cd,mkt_typ_cd,prov_mkt_nbr,ipa_nbr,prov_spcl_cd,cos_div_cd,cos_ntwk_cd,cos_pnl_nbr,pcp_typ_cd,cos_prov_spcl_cd,tax_id_nbr,tax_id_sufx_cd,rndm_typ_cd,tax_id_prfx_cd,src_prov_id,src_prov_id_typ_cd,prov_aco_id,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,cov_typ_cd,prov_id,pcp_eff_dt) DO  UPDATE SET pcp_canc_dt= ?,updt_typ_cd= ?,cnsm_id= ?,partn_nbr= ?,racf_id= ?,row_user_id= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,prov_contr_id= ?,adr_seq_nbr= ?,lgcy_prdt_cd= ?,mkt_typ_cd= ?,prov_mkt_nbr= ?,ipa_nbr= ?,prov_spcl_cd= ?,cos_div_cd= ?,cos_ntwk_cd= ?,cos_pnl_nbr= ?,pcp_typ_cd= ?,cos_prov_spcl_cd= ?,tax_id_nbr= ?,tax_id_sufx_cd= ?,rndm_typ_cd= ?,tax_id_prfx_cd= ?,src_prov_id= ?,src_prov_id_typ_cd= ?,prov_aco_id= ?,src_sys_id= ?,updt_dttm = ?
+    lCovPrdtPcpDel: UPDATE <SCHEMA>.l_cov_prdt_pcp SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and cov_typ_cd=? and prov_id=? and pcp_eff_dt=?::date
+    lCovPrdtDt: INSERT INTO  <SCHEMA>.l_cov_prdt_dt (cov_eff_dt,cov_canc_dt,cov_pd_thru_dt,ebill_dt,retro_elig_recv_dt,retro_orig_cov_eff_dt,retro_orig_cov_canc_dt,cobra_eff_dt,elig_grc_prd_thru_dt,lst_prem_pd_dt,pol_ren_dt,partn_nbr,xref_id_partn_nbr,cnsm_id,prfl_id,src_cdb_xref_id,cos_pnl_nbr,src_tmstmp,row_tmstmp,created_dttm,updt_dttm,src_cd,lgcy_pol_nbr,lgcy_src_id,cov_typ_cd,cos_div_cd,mkt_typ_cd,cos_grp_nbr,lgcy_prdt_typ_cd,lgcy_prdt_cd,cov_lvl_typ_cd,shr_arng_cd,shr_arng_oblig_cd,lgcy_pln_var_cd,lgcy_rpt_cd,prdt_srvc_typ_cd,ee_sts_typ_cd,govt_pgm_typ_cd,clm_sys_typ_cd,elig_sys_typ_cd,ces_grp_nbr,mkt_site_cd,row_sts_cd,medica_trvlben_ind,row_user_id,sec_typ_cd,cancel_rsn_typ_cd,cov_pd_thru_rsn_cd,list_bill_typ_cd,billing_sufx_cd,billing_subgrp_nbr,retro_days,retro_typ_cd,retro_ovrd_typ_cd,tops_cov_lvl_typ_cd,lgcy_ben_pln_id,lgcy_prdt_id,rr_ben_grp_nbr,rr_ben_grp_cho_cd,rr_br_cd,rr_un_cd,rr_optout_plan_ind,updt_typ_cd,racf_id,prr_cov_mo,fund_typ_cd,state_of_issue_cd,cobra_mo,cobra_qual_evnt_cd,grndfathered_pol_ind,deriv_cov_ind,cnsm_lgl_enty_nm,indv_grp_typ_cd,src_cov_mnt_typ_cd,pbp_cd,h_cntrct_id,risk_typ_cd,bil_typ_cd,rate_cov_typ_cd,plan_cd,seg_id,src_sys_id) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (cov_eff_dt,xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_pol_nbr,lgcy_src_id,cov_typ_cd) DO  UPDATE SET cov_canc_dt= ?,cov_pd_thru_dt= ?,ebill_dt= ?,retro_elig_recv_dt= ?,retro_orig_cov_eff_dt= ?,retro_orig_cov_canc_dt= ?,cobra_eff_dt= ?,elig_grc_prd_thru_dt= ?,lst_prem_pd_dt= ?,pol_ren_dt= ?,partn_nbr= ?,prfl_id= ?,cnsm_id= ?,cos_pnl_nbr= ?,src_tmstmp= ?,row_tmstmp= ?,updt_dttm= ?,cos_div_cd= ?,mkt_typ_cd= ?,cos_grp_nbr= ?,lgcy_prdt_typ_cd= ?,lgcy_prdt_cd= ?,cov_lvl_typ_cd= ?,shr_arng_cd= ?,shr_arng_oblig_cd= ?,lgcy_pln_var_cd= ?,lgcy_rpt_cd= ?,prdt_srvc_typ_cd= ?,ee_sts_typ_cd= ?,govt_pgm_typ_cd= ?,clm_sys_typ_cd= ?,elig_sys_typ_cd= ?,ces_grp_nbr= ?,mkt_site_cd= ?,row_sts_cd= ?,medica_trvlben_ind= ?,row_user_id= ?,sec_typ_cd= ?,cancel_rsn_typ_cd= ?,cov_pd_thru_rsn_cd= ?,list_bill_typ_cd= ?,billing_sufx_cd= ?,billing_subgrp_nbr= ?,retro_days= ?,retro_typ_cd= ?,retro_ovrd_typ_cd= ?,tops_cov_lvl_typ_cd= ?,lgcy_ben_pln_id= ?,lgcy_prdt_id= ?,rr_ben_grp_nbr= ?,rr_ben_grp_cho_cd= ?,rr_br_cd= ?,rr_un_cd= ?,rr_optout_plan_ind= ?,updt_typ_cd= ?,racf_id= ?,prr_cov_mo= ?,fund_typ_cd= ?,state_of_issue_cd= ?,cobra_mo= ?,cobra_qual_evnt_cd= ?,grndfathered_pol_ind= ?,deriv_cov_ind= ?,cnsm_lgl_enty_nm= ?,indv_grp_typ_cd= ?,src_cov_mnt_typ_cd= ?,pbp_cd= ?,h_cntrct_id= ?,risk_typ_cd= ?,bil_typ_cd= ?,rate_cov_typ_cd= ?,plan_cd= ?,seg_id= ?,src_sys_id= ?
+    lCovPrdtDtDel: UPDATE <SCHEMA>.l_cov_prdt_dt SET row_sts_cd = ?,updt_dttm=? WHERE partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and cov_eff_dt=?::date and lgcy_pol_nbr =? and cov_typ_cd = ?
+    lHltSrvDt: INSERT INTO  <SCHEMA>.l_hlt_srv_dt (partn_nbr,cnsm_id,src_cd,lgcy_pol_nbr,lgcy_src_id,hlt_srv_prdt_ln_cd,hlt_srv_prdt_cd,hlt_srv_eff_dt,hlt_srv_canc_dt,cos_div_cd,cos_grp_nbr,cov_lvl_typ_cd,shr_arng_typ_cd,shr_arng_oblig_cd,ee_sts_typ_cd,elig_sys_typ_cd,row_sts_cd,src_tmstmp,row_tmstmp,prfl_id,row_user_id,sec_typ_cd,src_cdb_xref_id,xref_id_partn_nbr,cancel_rsn_typ_cd,cov_pd_thru_dt,cov_pd_thru_rsn_cd,list_bill_typ_cd,billing_sufx_cd,billing_subgrp_nbr,ebill_dt,retro_elig_recv_dt,retro_days,retro_typ_cd,retro_ovrd_typ_cd,retro_orig_cov_eff_dt,retro_orig_cov_canc_dt,lgcy_pln_var_cd,lgcy_rpt_cd,lgcy_ben_pln_id,lgcy_prdt_id,updt_typ_cd,racf_id,ces_grp_nbr,fund_typ_cd,state_of_issue_cd,cobra_mo,cobra_qual_evnt_cd,cobra_eff_dt,grndfathered_pol_ind,deriv_cov_ind,tops_cov_lvl_typ_cd,cnsm_lgl_enty_nm,indv_grp_typ_cd,bil_typ_cd,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_pol_nbr,lgcy_src_id,hlt_srv_prdt_ln_cd,hlt_srv_prdt_cd,hlt_srv_eff_dt) DO  UPDATE SET hlt_srv_canc_dt= ?,cos_div_cd= ?,cos_grp_nbr= ?,cov_lvl_typ_cd= ?,shr_arng_typ_cd= ?,shr_arng_oblig_cd= ?,ee_sts_typ_cd= ?,elig_sys_typ_cd= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,prfl_id= ?,row_user_id= ?,sec_typ_cd= ?,cnsm_id= ?,partn_nbr= ?,cancel_rsn_typ_cd= ?,cov_pd_thru_dt= ?,cov_pd_thru_rsn_cd= ?,list_bill_typ_cd= ?,billing_sufx_cd= ?,billing_subgrp_nbr= ?,ebill_dt= ?,retro_elig_recv_dt= ?,retro_days= ?,retro_typ_cd= ?,retro_ovrd_typ_cd= ?,retro_orig_cov_eff_dt= ?,retro_orig_cov_canc_dt= ?,lgcy_pln_var_cd= ?,lgcy_rpt_cd= ?,lgcy_ben_pln_id= ?,lgcy_prdt_id= ?,updt_typ_cd= ?,racf_id= ?,ces_grp_nbr= ?,fund_typ_cd= ?,state_of_issue_cd= ?,cobra_mo= ?,cobra_qual_evnt_cd= ?,cobra_eff_dt= ?,grndfathered_pol_ind= ?,deriv_cov_ind= ?,tops_cov_lvl_typ_cd= ?,cnsm_lgl_enty_nm= ?,indv_grp_typ_cd= ?,bil_typ_cd= ?,src_sys_id= ?,updt_dttm= ?
+    lHltSrvDtDel: UPDATE <SCHEMA>.l_hlt_srv_dt SET row_sts_cd = ?,updt_dttm=? WHERE partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_pol_nbr=? and lgcy_src_id=? and hlt_srv_prdt_ln_cd =? and hlt_srv_prdt_cd=? and hlt_srv_eff_dt=?::date
+    lIfDisPrdtDt: INSERT INTO  <SCHEMA>.l_lf_dis_prdt_dt (partn_nbr,src_cd,cnsm_id,lgcy_pol_nbr,lgcy_src_id,cov_typ_cd,lgcy_prdt_typ_cd,cov_eff_dt,cov_canc_dt,ee_sts_typ_cd,elig_sys_typ_cd,clm_sys_typ_cd,row_sts_cd,src_tmstmp,row_tmstmp,prfl_id,row_user_id,sec_typ_cd,src_cdb_xref_id,xref_id_partn_nbr,plan_cd,prdt_prem_amt,insd_amt,aprv_amt,entrant_sts_cd,eoi_sts_cd,eoi_sts_dt,wop_cd,wop_eff_dt,wop_canc_dt,accl_dth_cd,accl_dth_payo_amt,accl_dth_eff_dt,req_amt,cov_sts_cd,sal_ben_mult_fct,age_rduc_appl_pct,rduc_appl_age_nbr,cancel_rsn_typ_cd,cov_pd_thru_dt,cov_pd_thru_rsn_cd,list_bill_typ_cd,billing_sufx_cd,billing_subgrp_nbr,ebill_dt,lgcy_ben_pln_id,lgcy_pln_var_cd,lgcy_rpt_cd,updt_typ_cd,racf_id,ces_grp_nbr,fund_typ_cd,state_of_issue_cd,grndfathered_pol_ind,deriv_cov_ind,cnsm_lgl_enty_nm,indv_grp_typ_cd,bil_typ_cd,rate_cov_typ_cd,pol_ren_dt,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cd,src_cdb_xref_id,lgcy_pol_nbr,lgcy_src_id,cov_typ_cd,lgcy_prdt_typ_cd,cov_eff_dt) DO  UPDATE SET cov_canc_dt= ?,ee_sts_typ_cd= ?,elig_sys_typ_cd= ?,clm_sys_typ_cd= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,prfl_id= ?,row_user_id= ?,sec_typ_cd= ?,cnsm_id= ?,partn_nbr= ?,plan_cd= ?,prdt_prem_amt= ?,insd_amt= ?,aprv_amt= ?,entrant_sts_cd= ?,eoi_sts_cd= ?,eoi_sts_dt= ?,wop_cd= ?,wop_eff_dt= ?,wop_canc_dt= ?,accl_dth_cd= ?,accl_dth_payo_amt= ?,accl_dth_eff_dt= ?,req_amt= ?,cov_sts_cd= ?,sal_ben_mult_fct= ?,age_rduc_appl_pct= ?,rduc_appl_age_nbr= ?,cancel_rsn_typ_cd= ?,cov_pd_thru_dt= ?,cov_pd_thru_rsn_cd= ?,list_bill_typ_cd= ?,billing_sufx_cd= ?,billing_subgrp_nbr= ?,ebill_dt= ?,lgcy_ben_pln_id= ?,lgcy_pln_var_cd= ?,lgcy_rpt_cd= ?,updt_typ_cd= ?,racf_id= ?,ces_grp_nbr= ?,fund_typ_cd= ?,state_of_issue_cd= ?,grndfathered_pol_ind= ?,deriv_cov_ind= ?,cnsm_lgl_enty_nm= ?,indv_grp_typ_cd= ?,bil_typ_cd= ?,rate_cov_typ_cd= ?,pol_ren_dt= ?,src_sys_id= ?,updt_dttm= ?
+    lIfDisPrdtDtDel: UPDATE <SCHEMA>.l_lf_dis_prdt_dt SET row_sts_cd = ?,updt_dttm=? WHERE partn_nbr=? and src_cd=? and cnsm_id=? and lgcy_pol_nbr=? and lgcy_src_id=? and cov_typ_cd=? and lgcy_prdt_typ_cd=? and cov_eff_dt=?::date
+    mlCnsmAdr: INSERT INTO  <SCHEMA>.ml_cnsm_adr (partn_nbr,cnsm_id,src_cd,lgcy_pol_nbr,lgcy_src_id,pst_adr_typ_cd,str_adr_ln_1_txt,str_adr_ln_2_txt,cty_nm,pst_cd,pst_ext_cd,st_cd,cntry_cd,row_sts_cd,updt_typ_cd,racf_id,row_user_id,row_tmstmp,res_mkt_site_nbr,pst_adr_eff_dt,src_cdb_xref_id,xref_id_partn_nbr,src_tmstmp,cntry_subdiv_cd,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,pst_adr_typ_cd) DO  UPDATE SET lgcy_pol_nbr= ?,str_adr_ln_1_txt= ?,str_adr_ln_2_txt= ?,cty_nm= ?,pst_cd= ?,pst_ext_cd= ?,st_cd= ?,cntry_cd= ?,row_sts_cd= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_tmstmp= ?,res_mkt_site_nbr= ?,pst_adr_eff_dt= ?,cnsm_id= ?,partn_nbr= ?,src_tmstmp= ?,cntry_subdiv_cd= ?,src_sys_id= ?,updt_dttm= ?
+    mlCnsmAdrDel: UPDATE <SCHEMA>.ml_cnsm_adr SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and pst_adr_typ_cd=?
+    mlCnsmEltrAdrStandby: INSERT INTO  <SCHEMA>.ml_cnsm_elctr_adr_stage (partn_nbr,cnsm_id,src_cd,lgcy_pol_nbr,lgcy_src_id,elctr_adr_typ_cd,elctr_adr_txt,opt_out_ind,row_sts_cd,updt_typ_cd,racf_id,row_user_id,row_tmstmp,src_tmstmp,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (partn_nbr,cnsm_id,src_cd,lgcy_src_id,elctr_adr_typ_cd) DO  UPDATE SET lgcy_pol_nbr= ?,elctr_adr_txt= ?,opt_out_ind= ?,row_sts_cd= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_tmstmp= ?,src_tmstmp= ?,src_sys_id= ?,updt_dttm= ?
+    mlCnsmEltrAdr: INSERT INTO <SCHEMA>.ml_cnsm_elctr_adr (partn_nbr,cnsm_id,src_cd,lgcy_pol_nbr,lgcy_src_id,elctr_adr_typ_cd,elctr_adr_txt,opt_out_ind,row_sts_cd,updt_typ_cd,racf_id,row_user_id,row_tmstmp,src_tmstmp,src_sys_id,created_dttm,updt_dttm,src_cdb_xref_id,xref_id_partn_nbr) select ? as partn_nbra,? as cnsm_ida,? as src_cda,? as lgcy_pol_nbra,? as  lgcy_src_ida,? as elctr_adr_typ_cda,? as elctr_adr_txta,? as opt_out_inda,? as row_sts_cda,? as updt_typ_cda,? as racf_ida,? as row_user_ida,? as row_tmstmpa,? as src_tmstmpa,? as src_sys_ida,? as created_dttma,? as updt_dttma, src_cdb_xref_id as src_cdb_xref_ida ,xref_id_partn_nbr as xref_id_partn_nbra from stage.l_cnsm_srch where  partn_nbr = ? and cnsm_id = ? and src_cd = ? and lgcy_src_id = ? on conflict (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,elctr_adr_typ_cd) DO  UPDATE SET  lgcy_pol_nbr= excluded.lgcy_pol_nbr,elctr_adr_txt= excluded.elctr_adr_txt,opt_out_ind= excluded.opt_out_ind,row_sts_cd= excluded.row_sts_cd,updt_typ_cd= excluded.updt_typ_cd,racf_id= excluded.racf_id,row_user_id= excluded.row_user_id,row_tmstmp= excluded.row_tmstmp,src_tmstmp= excluded.src_tmstmp,src_sys_id= excluded.src_sys_id,updt_dttm= excluded.updt_dttm,cnsm_id=excluded.cnsm_id,partn_nbr=excluded.partn_nbr
+    mlCnsmEltrAdrDel: UPDATE <SCHEMA>.ml_cnsm_elctr_adr SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and elctr_adr_typ_cd=?
+    mlCnsmTel: INSERT INTO  <SCHEMA>.ml_cnsm_tel (partn_nbr,cnsm_id,src_cd,lgcy_pol_nbr,lgcy_src_id,tel_typ_cd,tel_nbr,row_sts_cd,updt_typ_cd,racf_id,row_user_id,row_tmstmp,src_tmstmp,src_cdb_xref_id,xref_id_partn_nbr,tel_cls_typ_cd,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,tel_typ_cd) DO  UPDATE SET lgcy_pol_nbr= ?,tel_nbr= ?,row_sts_cd= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_tmstmp= ?,src_tmstmp= ?,cnsm_id= ?,partn_nbr= ?,tel_cls_typ_cd= ?,src_sys_id= ?,updt_dttm= ?
+    mlCnsmTelDel: UPDATE <SCHEMA>.ml_cnsm_tel SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and tel_typ_cd=?
+    mlCnsmXref: INSERT INTO  <SCHEMA>.ml_cnsm_xref (partn_nbr,cnsm_id,src_cd,alt_cnsm_id,alt_id_typ_cd,lgcy_src_id,unfmt_alt_cnsm_id,row_sts_cd,updt_typ_cd,racf_id,row_user_id,row_tmstmp,alphid_srch_id,intid_srch_id,src_cdb_xref_id,xref_id_partn_nbr,src_tmstmp,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,alt_cnsm_id,alt_id_typ_cd,lgcy_src_id) DO  UPDATE SET unfmt_alt_cnsm_id= ?,row_sts_cd= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_tmstmp= ?,alphid_srch_id= ?,intid_srch_id= ?,cnsm_id= ?,partn_nbr= ?,src_tmstmp= ?,src_sys_id= ?,updt_dttm= ?
+    mlCnsmXrefDel: UPDATE <SCHEMA>.ml_cnsm_xref SET row_sts_cd = ? ,updt_dttm=? WHERE  partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and alt_cnsm_id=? and alt_id_typ_cd =?
+    cnsmMdcrEntl: INSERT INTO  <SCHEMA>.cnsm_Mdcr_Entl (partn_nbr,cnsm_id,src_cd,lgcy_src_id,entl_typ_cd,entl_eff_dt,entl_canc_dt,fst_dls_dt,tplnt_dt,src_updt_typ_cd,updt_rstrc_typ_cd,src_cdb_xref_id,xref_id_partn_nbr,updt_typ_cd,racf_id,row_user_id,row_sts_cd,src_tmstmp,row_tmstmp,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,entl_typ_cd,entl_eff_dt) DO  UPDATE SET entl_canc_dt= ?,fst_dls_dt= ?,tplnt_dt= ?,src_updt_typ_cd= ?,updt_rstrc_typ_cd= ?,cnsm_id= ?,partn_nbr= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,src_sys_id= ?,updt_dttm=?
+    cnsmMdcrEntlDel: UPDATE <SCHEMA>.cnsm_Mdcr_Entl SET row_sts_cd = ? ,updt_dttm=? WHERE partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and entl_typ_cd=? and entl_eff_dt=?::date
+    cnsmOthrIns: INSERT INTO  <SCHEMA>.Cnsm_Othr_Ins (partn_nbr,cnsm_id,src_cd,lgcy_src_id,cob_cov_typ_cd,oi_eff_dt,oi_canc_dt,oi_verf_dt,oi_ind,custd_typ_cd,src_updt_typ_cd,updt_rstrc_typ_cd,src_cdb_xref_id,xref_id_partn_nbr,updt_typ_cd,racf_id,row_user_id,row_sts_cd,src_tmstmp,row_tmstmp,src_sys_id,created_dttm,updt_dttm) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ) ON CONFLICT (xref_id_partn_nbr,src_cdb_xref_id,src_cd,lgcy_src_id,cob_cov_typ_cd,oi_eff_dt) DO  UPDATE SET oi_canc_dt= ?,oi_verf_dt= ?,oi_ind= ?,custd_typ_cd= ?,src_updt_typ_cd= ?,updt_rstrc_typ_cd= ?,cnsm_id= ?,partn_nbr= ?,updt_typ_cd= ?,racf_id= ?,row_user_id= ?,row_sts_cd= ?,src_tmstmp= ?,row_tmstmp= ?,src_sys_id= ?,created_dttm= ?,updt_dttm= ?
+    cnsmOthrInsDel: UPDATE <SCHEMA>.Cnsm_Othr_Ins SET row_sts_cd = ? ,updt_dttm=? WHERE partn_nbr=? and cnsm_id=? and src_cd=? and lgcy_src_id = ? and cob_cov_typ_cd = ? and oi_eff_dt=?::date
+
+
+---
+spring.datasource.driver-class-name: org.postgresql.Driver
+spring.datasource.url: jdbc:postgresql://dbvrd28250:5432/postgres?prepareThreshold=0
+spring.datasource.username: postgres
+spring.datasource.password:
+spring.datasource.type: com.zaxxer.hikari.HikariDataSource
+spring.datasource.hikari.minimumIdle: 5
+spring.datasource.hikari.maximumPoolSize: 5
+spring.datasource.hikari.idleTimeout: 30000
+spring.datasource.hikari.poolName: CSPHikariCP
+spring.datasource.hikari.maxLifetime: 2000000
+spring.datasource.hikari.connectionTimeout: 500000
+spring.datasource.hikari.leakDetectionThreshold: 60000
+
+
+#groupby: membertableName: source_member
+#groupby.subscribertableName: source_subscriber
+#groupby.database: csp_facets_streams
+
+#spring.profiles: local
+logging.level: INFO

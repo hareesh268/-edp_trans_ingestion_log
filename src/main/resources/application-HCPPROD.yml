@@ -1,0 +1,156 @@
+spring.profiles.active: local
+logging.level.com.optum.exts.cdb.stream.SourceCSBStreams: INFO
+#logging.level: INFO
+#logging.level.com.optum.exts: ${logging.level}
+#logging.level.org.apache.kafka: ${logging.level}
+#logging.level.com.datastax.driver.core.policies: ${logging.level}
+#logging.level.org.apache.kafka.streams.processor.internals.RecordCollectorImpl: OFF
+#logging.level.org.apache.kafka.streams.processor.internals.AssignedTasks: OFF
+
+
+
+#logging.level.com.example.demo.LogbackTestApplication: info
+#logging.pattern.console: %d{yyyy-MM-dd HH:mm:ss} - %msg%n
+#logging.pattern.file: %d{yyyy-MM-dd HH:mm:ss} - %msg%n [%thread] %-5level %logger{36} - %msg%n
+#logging.path: logs
+##server.port: 8183
+
+
+
+
+
+spring:
+  kafka:
+    #auto.offset.reset: latest
+    #auto.commit.interval.ms: 6000
+    #bootstrapServers: kaas-prod-elr-a.optum.com:443
+    bootstrapServers: elr6hz1-06-s18.uhc.com:16015,elr6hz1-06-s02.uhc.com:16015,elr6hz1-06-s01.uhc.com:16015,elr6hz1-06-s07.uhc.com:16015,elr6hz1-06-s10.uhc.com:16015,elr6hz1-06-s06.uhc.com:16015,elr6hz1-06-s03.uhc.com:16015,elr6hz1-06-s05.uhc.com:16015,elr6hz1-06-s14.uhc.com:16015,elr6hz1-06-s11.uhc.com:16015,elr6hz1-06-s20.uhc.com:16015
+    #errors.tolerance : all
+    #acks: all
+
+
+
+    streams:
+      #      applicationId: cdb-postgresql-stream-attunitydev-raw
+      #applicationId: edp-att-prod-test-k8-test1123456
+      applicationId: cdb-claas-prod-edp-20201106
+
+
+
+
+
+      metricsRecordingLevel: INFO
+
+
+      properties:
+
+        security.protocol: "SSL"
+        ssl.keystore.location: /tmp/hcpprodcert/keystore.jks
+        ssl.truststore.location: /tmp/hcpprodcert/truststore.jks
+        ssl.truststore.password: ${TRUSTSTORE_PWD}
+        ssl.keystore.password: ${KEYSTORE_PWD}
+        ssl.key.password: ${KEY_PWD}
+        default.timestamp.extractor: org.apache.kafka.streams.processor.WallclockTimestampExtractor
+        default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        #auto.offset.reset: earliest
+        auto.offset.reset: latest
+
+
+      custom:
+        "[batch.size]": 1000012
+        "[default.api.timeout.ms]": 900000
+        "[delivery.timeout.ms]": 2147483647
+        "[heartbeat.interval.ms]": 6000
+        "[max.block.ms]": 2147483647
+        "[max.in.flight.requests.per.connection]": 1
+        "[max.request.size]": 1000012
+        "[request.timeout.ms]": 60000
+        "[retries]": 2147483647
+        "[session.timeout.ms]": 120000
+
+    properties:
+      #schema.registry.url: "http://kaas-test-schema-registry-a.optum.com" #http://127.0.0.1:8081
+      schema.registry.url: "http://kaas-prod-schema-registry-a.optum.com"
+      specific.avro.reader: true
+      num.stream.threads: 3
+
+
+streams:
+
+  topicinfo:
+
+      cdbFltr:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CDB_FLTR
+      cdbSecurity:  hcp-eligibility.ATTPROD.CDBV2.F6435SRP.CDB_SECURITY
+      cnsmDtl:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_DTL
+      cnsmMdcrEnrl:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_MDCR_ENRL
+      cnsmMdcrPrisec:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_MDCR_PRISEC
+      cnsmSts:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_STS
+      lCnsmSrch:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.L_CNSM_SRCH
+      LcovPrdtdt:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.L_COV_PRDT_DT
+      lCovPrdtPcp:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.L_COV_PRDT_PCP
+      lHltSrvDt:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.L_HLT_SRV_DT
+      lLfDisPrdtDt:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.L_LF_DIS_PRDT_DT
+      mlCnsmAdr:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.ML_CNSM_ADR
+      mlCnsmElctrAdr:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.ML_CNSM_ELCTR_ADR
+      mlCnsmTel:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.ML_CNSM_TEL
+      cnsmMdcrEntl:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_MDCR_ENTL
+      cnsmOthrIns:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_OTHR_INS
+      covLvlTyp:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.COV_LVL_TYP
+      mlCnsmXref:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.ML_CNSM_XREF
+      cnsmAuthRep:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_AUTH_REP
+      cnsmCal:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_CAL
+      cnsmCobPrisec:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_COB_PRISEC
+      cnsmCobPrimacy:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_COB_PRIMACY
+      cnsmCovCustDefnFld:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_COV_CUST_DEFN_FLD
+      cnsmCustDefnFld:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_CUST_DEFN_FLD
+      cnsmEft:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_EFT
+      cnsmMdcrElig:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_MDCR_ELIG
+      cnsmMdcrPrimacy:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_MDCR_PRIMACY
+      cnsmPrxstCond:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_PRXST_COND
+      cnsmSlryBasDedOop:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CNSM_SLRY_BAS_DED_OOP
+      covInfo:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.COV_INFO
+      custInfo:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.CUST_INFO
+      plnBenSet:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.PLN_BEN_SET
+      plnBenSetDet:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.PLN_BEN_SET_DET
+      polInfo:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.POL_INFO
+      rxBenSetDet:  hcp-eligibility.ATTPROD.CDBV2.F6435DBP.RX_BEN_SET_DET
+
+
+input:
+
+  postgresUrl: jdbc:postgresql://dbvrd28250:5432/postgres?stringtype=unspecified
+  postgresUser: postgres
+  postgresPwd: postgres
+  schema: f6435dbpedp
+  physicalDelValue: X
+  emptyJsonValue: '{}'
+  srcSysId: HCPSTRM
+  runningSet: env.get("$groupName")
+  queryLookup:
+    ingestionLog: INSERT INTO <SCHEMA>.long_term_ingestion_log(table_name, row_key, ingestion_ts, row_sts_cd, cdc_flag, cdc_ts, hst_val, new_val,row_tmstmp) VALUES (?,?,?,?,?,?,?::json,?::json,?) ON CONFLICT (table_name, row_key, ingestion_ts) DO UPDATE SET row_sts_cd = ?, cdc_flag = ?, cdc_ts = ?, hst_val = ?::json, new_val = ?::json , row_tmstmp = ? where <SCHEMA>.long_term_ingestion_log.row_tmstmp <= ?
+
+---
+
+
+spring.datasource.driver-class-name: org.postgresql.Driver
+spring.datasource.url: ${CON_URL}?ApplicationName=attunity
+spring.datasource.username: ${SECRETS_EDP_USER}
+spring.datasource.password: ${SECRETS_EDP_USER_PASSWD}
+spring.datasource.type: com.zaxxer.hikari.HikariDataSource
+spring.datasource.hikari.minimumIdle: ${MIN_CON_POOL}
+spring.datasource.hikari.maximumPoolSize: ${MAX_CON_POOL}
+spring.datasource.hikari.idleTimeout: 30000
+spring.datasource.hikari.poolName: CSPHikariCP
+spring.datasource.hikari.maxLifetime: 2000000
+spring.datasource.hikari.connectionTimeout: 1500000
+spring.datasource.hikari.leakDetectionThreshold: 2100000
+
+logging.splunk.url: https://phi-dmz-hec-splunk.optum.com
+logging.splunk.token: ${SECRETS_SPLUNK_TOKEN}
+logging.splunk.index: cba_CDB_BDPaaS
+logging.splunk.host: http://k8s-prod-ctc-aci.optum.com:31142
+
+
+#spring.profiles: local
+logging.level: INFO

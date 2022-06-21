@@ -1,0 +1,9 @@
+DE_STREAMS.ctc.cdc.cdb.cnsm_cov_cust_defn_fld.v2,4
+DE_STREAMS.ctc.cdc.cdb.l_cov_prdt_dt.v2,4
+DE_STREAMS.ctc.cdc.cdb.l_hlt_srv_dt.v2,4
+DE_STREAMS.ctc.cdc.cdb.l_finc_acct.v2,4
+DE_STREAMS.ctc.cdc.foundational.membership.v1,4
+DE_STREAMS.ctc.cdc.membership_keyed.cnsm_cov_cust_defn_fld.v1,4
+DE_STREAMS.ctc.cmd.publish_membership.v1,4
+DE_STREAMS.ctc.fact.deadletter.membership_domain_stream.v1,1
+DE_STREAMS.ctc.fact.manualdeadletter.membership_domain_stream.v1,1

@@ -1,0 +1,8 @@
+apiVersion: v1
+metadata:
+  askId: UHGWM110-016199
+  caAgileId: 209067596300d
+  projectKey: com.optum.exts.cdb.stream:edp_trans_ingestion_log
+  projectFriendlyName: edp_trans_ingestion_log
+  componentType: code
+  targetQG: GATE_00

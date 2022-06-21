@@ -1,0 +1,10 @@
+rootProject.buildFileName = 'edp_trans_ingestion_log.gradle'
+rootProject.name = 'edp_trans_ingestion_log'
+setBuildFileName(rootProject)
+
+def setBuildFileName(project) {
+    project.children.each { child ->
+        child.buildFileName = "${child.name}.gradle"
+        setBuildFileName(child)
+    }
+}

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edpingestionlog
+  namespace: cdbbds
+spec:
+  selector:
+    matchLabels:
+      run: edpingestionlog
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        run: edpingestionlog
+    spec:
+     containers:
+     - name: mycontainer
+       image: docker.repo1.uhc.com/bds_oso_id/edp_trans_ingestion_log-master
+       ports:
+       - containerPort: 8080
+       imagePullPolicy: Always
+       resources:
+        requests:
+          memory: "500Mi"
+          cpu: "75m"
+        limits:
+          memory: "1Gi"
+          cpu: "300m"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edpingestionlog-svc3
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 32191
+  selector:
+    run: edpingestionlog
+
+"resources": {
+              "limits": {
+                "cpu": "300m",
+                "memory": "1Gi"
+              },
+              "requests": {
+                "cpu": "75m",
+                "memory": "500Mi"
+              }
+            }
